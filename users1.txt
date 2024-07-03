@@ -1,3 +1,0 @@
-light; sudo,dev,data
-idimma; sudo
-mayowa; dev,www-data
