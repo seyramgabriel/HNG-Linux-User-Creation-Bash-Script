@@ -239,8 +239,8 @@ fi
 This checks if an argument (the path to the username file) was provided, if it exists, and if it is a regular file. If not, it prints usage instructions and exits.
 
 ## Block 7
-### Process each line of the input file
 ```
+# Process each line of the input file
 while IFS=';' read -r username groups; do
     # Remove any leading or trailing whitespace
     username=$(echo "$username" | xargs)
@@ -249,8 +249,8 @@ while IFS=';' read -r username groups; do
 This ensures the script reads each line of the input file, splitting it into username and groups using ; as the delimiter. xargs is used to remove leading and trailing whitespace in the input file, this helps to avoid errors in processing the file.
 
 ## Block 8
-### Check if the user already exists
 ```
+    # Check if the user already exists
     if id "$username" &>/dev/null; then
         log_message "User $username already exists. Skipping."
         continue
@@ -259,8 +259,8 @@ This ensures the script reads each line of the input file, splitting it into use
 This checks if the user already exists and if so, logs a message and skips to the next iteration. "log_message" is used to call the log_message function, "User $username already exists. Skipping." becomes $1 as indicated in the log_message function.
 
 ## Block 9
-### Create user with a home directory
 ```
+    # Create user with a home directory
     useradd -m -s /bin/bash "$username"
     if [[ $? -eq 0 ]]; then
         log_message "User $username created."
@@ -272,16 +272,16 @@ This checks if the user already exists and if so, logs a message and skips to th
 This creates the user with a home directory and sets the default shell to /bin/bash. If successful, logs a message; otherwise, logs an error and skips to the next iteration.
 
 ## Block 10
-### Create a group with the same name as the username
 ```
+    # Create a group with the same name as the username
     groupadd "$username"
     usermod -a -G "$username" "$username"
 ```
 This creates a group with the same name as the username and adds the user to this group. Remember, each username is used to create a primary group.
 
 ## Block 11
-### Add user to additional groups
 ```
+    # Add user to additional groups
     IFS=',' read -ra ADDR <<< "$groups"
     for group in "${ADDR[@]}"; do
         group=$(echo "$group" | xargs) # Trim whitespace
@@ -295,61 +295,70 @@ This creates a group with the same name as the username and adds the user to thi
 This splits the groups string by commas and processes each group. It trims whitespace, checks if the group exists, creates it if it does not exist, logs a message about the group created and adds the user to the group.
 
 ### Block 12
+```
     # Set permissions for the home directory
     chmod 700 "/home/$username"
     chown "$username:$username" "/home/$username"
-
+```
 This sets the permissions of the user's home directory to 700 and changes the ownership to the user and their group. This means that only the  users can read, write, and executive within their respective home directories.
 
 ### Block 13
+```
     # Generate a random password
     password=$(openssl rand -base64 12)
-
+```
 This generates a random password for the user using openssl, but the password will be in plain text.
 
 ### Block 14
+```
     # Hash the password
     hashed_password=$(openssl passwd -6 "$password")
-
+```
 The hashes or encodes the plain text password
 
 ### Block 15
+```
     # Set the hashed password for the user
     echo "$username:$hashed_password" | chpasswd -e
-
+```
 This sets the hashed password for the user using chpasswd. The -e flag is used to indicate.
 
 ### Block 16
+```
     # Log the hashed password for the CSV
     echo "$username,$password" >> $PASSWORD_FILE
-
+```
 This logs the hashed password of the user in the format "user,password" into the /var/secure/user_passwords.csv file
 
 ### Block 17
+```
     log_message "Password for $username set."
 done < "$1"
-
+```
 This logs the action of password being set into /var/log/user_manangement.log file
 
 ### Block 18
+```
 # Set permissions for the password file
 chmod 600 $PASSWORD_FILE
 chown root:root $PASSWORD_FILE
-
+```
 This sets the permissions of the password file to 600 (read and write for the owner only) and changes the ownership to root. This block of code ensures that only the root user has access to /var/secure/user_passwords.csv file
 
 ### Block 19
+```
 # Set permissions for the log file
 chmod 600 $LOG_FILE
 chown root:root $LOG_FILE
-
+```
 This sets the permissions of the log file to 600 (read and write for the owner only) and changes the ownership to root. This block of code ensures that only the root user has access to /var/slog/user_management.log file
 
 ### Block 20
+```
 log_message "User creation process completed."
 
 exit 0
-
+```
 This logs that the user creation process is complete and exits the script.
 
 ### Conclusion
