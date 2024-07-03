@@ -257,7 +257,7 @@ This ensures the script reads each line of the input file, splitting it into use
         continue
     fi
 ```
-This checks if the user already exists and if so, logs a message and skips to the next iteration. "log_message" is used to call the log_message function, "User $username already exists. Skipping." becomes $1 as indicated in the log_message function.
+This checks if the user already exists and if so, logs a message and skips to the next iteration. "log_message" is used to call the log_message function, then "User $username already exists. Skipping." becomes "$1" as indicated in the log_message function.
 
 ## Block 9
 ```
