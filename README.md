@@ -12,7 +12,7 @@ This creates the need to automate the task of adding users, creating groups, and
 
 Below is a bash script designed to automate the process of adding users and groups and assigning users to groups. Using this script for user and group management will ensure a consistent and efficient approach to maintaining access control in a Linux environment.
 
-```
+```Script
 #!/bin/bash
 
 # Ensure the script is run as root
