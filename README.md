@@ -4,17 +4,13 @@
 
 # Automating Linux user creation with bash script
 
-Using Linux in the Cloud affords multi-user environment, where a number of people can get into a server and perform tasks relevant to their job. 
-This however necessitates that measures be put in place to avoid users 
-or group of users from having more than enough access to files than they need for their respective jobs. 
-A Sysops Engineer or Linux Administrator would have to regulate access using the least privileged principle. 
-The least privilege principle is a security concept that states that a user should only be given the minimum amount of access they require.
- 
-Ensuring this principle can be tedious and error prone, especially when the number of users and groups involved are many and the Sysops Engineer or Linux Administrator has to be adding the users to a server and in turn add these users to relevant groups on a recurrent basis, manually. 
+Using Linux in the Cloud provides a multi-user environment where multiple people can access a server and perform tasks relevant to their jobs. However, this necessitates measures to prevent users or groups from having more access to files than necessary for their respective roles. A SysOps Engineer or Linux Administrator must regulate access according to the least privilege principle.
 
-This births the need to automate the task of adding users and groups and assigning users to groups with a script.
+The least privilege principle is a security concept that states a user should only be given the minimum amount of access they require. Ensuring adherence to this principle can be tedious and error-prone, especially when managing a large number of users and groups. Manually adding users to a server and assigning them to relevant groups on a recurrent basis is not only time-consuming but also prone to mistakes.
 
-Below is a bash script that can help automate the adding of users and groups whiles assigning users to groups. Using a script for this task ensures consistency and efficiency. 
+This creates the need to automate the task of adding users, creating groups, and assigning users to groups. Automation ensures consistency, efficiency, and reduces the likelihood of errors.
+
+Below is a bash script designed to automate the process of adding users and groups and assigning users to groups. Using this script for user and group management will ensure a consistent and efficient approach to maintaining access control in a Linux environment.
 
 ```
 #!/bin/bash
