@@ -120,9 +120,9 @@ exit 0
 - Logging: All actions are logged to /var/log/user_management.log for auditing and troubleshooting.
 
 ## Summary of Script Logic
-- Input Validation: The script ensures it’s run as root and the input file is provided and exists.
+- Input Validation: The script ensures it is run as root and the input file is provided and exists.
 - Processing Input: Each line is processed to extract the username and groups. Whitespace is trimmed to avoid errors.
-- User Creation: The script will check if the user already exists. If not, it creates the user and their primary group (which is same name as username), and their home directory to which the user is the owner and the only one with rwx rights to it.
+- User Creation: The script will check if the user already exists. If not, it creates the user and their primary group (which is same name as username). The home directory of the user to which the user is the owner and the only one with "rwx" (read, write, execute) rights to it is also created.
 - Group Management: The script ensures additional groups exist (if not, it creates them) and assigns the user to these groups.
 - Password Management: The script generates a secure password, assigns it to the user, and logs it securely in /var/secure/user_passwords.csv. Only the root user would have access(read and write) to this file.
 - Logging: Each step executed by the script is logged for monitoring and auditing in /var/log/user_management.log along with the timestamp. Only the root user would have access(read and write) to this file.
@@ -134,7 +134,7 @@ The script includes checks to handle existing users, missing groups, and file pe
 The script is executed as follows
 ```./create_users.sh <path-to-username-file>```   
 or 
-```bash create_users.sh <path-to-username-file>```
+```bash create_users.sh <path-to-username-file>```.
 You must be a root user or someone with root user privileges.
 
 Example of input file content:
@@ -184,7 +184,7 @@ and the users assigned to it. If not, it will show no output.
 
 
 # Deeper Dive
-I believe thus far, this write up has provided enough information for a high level documentation. But I would like to dive a little deeper into the work of each block of code in the script, in case one wants to use it and must satisfy the demands of low level documentation. 
+Thus, this write-up has provided enough information for a high level documentation.The following section dives a little deeper into the work of each block of code in the script.  
 
 ## Block 1
 ```#!/bin/bash```
@@ -209,7 +209,7 @@ LOG_FILE="/var/log/user_management.log"
 PASSWORD_FILE="/var/secure/user_passwords.csv"
 ```
 
-These lines define variables for the paths of the log file and the password file. So, subsequent to this block of code, LOG_FILE is same as "/var/log/user_management.log" and PASSWORD_FILE refers to "/var/secure/user_passwords.csv
+These lines define variables for the paths of the log file and the password file. So, subsequent to this block of code, LOG_FILE is same as "/var/log/user_management.log" and PASSWORD_FILE refers to "/var/secure/user_passwords.csv".
 
 ## Block 4
 ```
@@ -315,7 +315,7 @@ This generates a random password for the user using openssl, but the password wi
     # Hash the password
     hashed_password=$(openssl passwd -6 "$password")
 ```
-This hashes or encodes the plain text password
+This hashes or encodes the plain text password.
 
 ### Block 15
 ```
@@ -329,14 +329,14 @@ This sets the hashed password for the user using chpasswd. The -e flag is used t
     # Log the hashed password for the CSV
     echo "$username,$password" >> $PASSWORD_FILE
 ```
-This logs the hashed password of the user in the format "user,password" into the /var/secure/user_passwords.csv file
+This logs the hashed password of the user in the format "user,password" into the "/var/secure/user_passwords.csv" file.
 
 ### Block 17
 ```
     log_message "Password for $username set."
 done < "$1"
 ```
-This logs the action of password being set into /var/log/user_manangement.log file
+This logs the action of password being set into "/var/log/user_manangement.log file".
 
 ### Block 18
 ```
@@ -344,7 +344,7 @@ This logs the action of password being set into /var/log/user_manangement.log fi
 chmod 600 $PASSWORD_FILE
 chown root:root $PASSWORD_FILE
 ```
-This sets the permissions of the password file to 600 (read and write for the owner only) and changes the ownership to root. This block of code ensures that only the root user has access to /var/secure/user_passwords.csv file
+This sets the permissions of the password file to 600 (read and write for the owner only) and changes the ownership to root. This block of code ensures that only the root user has access to "/var/secure/user_passwords.csv" file.
 
 ### Block 19
 ```
@@ -352,7 +352,7 @@ This sets the permissions of the password file to 600 (read and write for the ow
 chmod 600 $LOG_FILE
 chown root:root $LOG_FILE
 ```
-This sets the permissions of the log file to 600 (read and write for the owner only) and changes the ownership to root. This block of code ensures that only the root user has access to /var/slog/user_management.log file
+This sets the permissions of the log file to 600 (read and write for the owner only) and changes the ownership to root. This block of code ensures that only the root user has access to "/var/slog/user_management.log file".
 
 ### Block 20
 ```
@@ -367,7 +367,7 @@ The script simplifies user management in a Linux environment, ensuring consisten
 By automating these tasks, SysOps engineers or Linux Administrators can focus on more critical aspects of system management.
 
 ### Disclaimer:
-The script and article provide a foundation for automating user management in Linux, but remember to tailor it to your specific organizational needs.
+This article breaks down a bash script designed for automating user management in Linux. However, ensure it is tailored to your specific organizational needs.
 
 # Acknowledgment:
 This write up was inspired by a task assigned to DevOps interns in the HNG Internship Programme. Find out more on 
