@@ -190,8 +190,8 @@ I believe thus far, this write up has provided enough information for a high lev
 This line specifies that the script should be run using the Bash shell.
 
 ## Block 2
-### Ensure the script is run as root
 ```
+# Ensure the script is run as root
 if [[ $EUID -ne 0 ]]; then
    echo "This script must be run as root" 
    exit 1
@@ -202,8 +202,8 @@ exit 1-This line exits the script with an error code of 1 if the user is
 not a root user.
 
 ## Block 3
-### Log file
 ```
+ # Log file
 LOG_FILE="/var/log/user_management.log"
 PASSWORD_FILE="/var/secure/user_passwords.csv"
 ```
@@ -211,8 +211,8 @@ PASSWORD_FILE="/var/secure/user_passwords.csv"
 These lines define variables for the paths of the log file and the password file. So, subsequent to this block of code, LOG_FILE is same as "/var/log/user_management.log" and PASSWORD_FILE refers to "/var/secure/user_passwords.csv
 
 ## Block 4
-### Create secure directory for password storage if it doesn't exist
 ```
+# Create secure directory for password storage if it doesn't exist
 mkdir -p /var/secure
 chmod 700 /var/secure
 ```
@@ -220,16 +220,17 @@ This creates the /var/secure directory and sets its permissions to 700 so that o
 Note that /var/log directory already exists by default, so it doesn't need to be created like the /var/secure directory.
 
 ## Block 5
-### Function to log messages
+```
+#Function to log messages
 log_message() {
     echo "$(date +"%Y-%m-%d %T") : $1" >> $LOG_FILE
 }
-
+```
 This defines a function called log_message that appends a timestamped message "$(date +"%Y-%m-%d %T")" to the log file along with texts that will serve as arguments ("$1") anytime the function is called. Effectively, this block of code is behind the logging to /var/log/user_management.log file.
 
 ## Block 6
-### Check if the file exists
 ```
+# Check if the file exists
 if [[ -z "$1" || ! -f "$1" ]]; then
     echo "Usage: $0 <path-to-username-file>"
     exit 1
