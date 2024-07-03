@@ -1,3 +1,7 @@
+# Author: Ayetor Gabriel Seyram Kofi
+
+# Date: 3rd July, 2024
+
 # Automating Linux user creation with bash script
 
 Using Linux in the Cloud affords multi-user environment, where a number of people can get into a server and perform tasks relevant to their job. 
@@ -246,7 +250,7 @@ while IFS=';' read -r username groups; do
     username=$(echo "$username" | xargs)
     groups=$(echo "$groups" | xargs)
 ```
-This ensures the script reads each line of the input file, splitting it into username and groups using ; as the delimiter. xargs is used to remove leading and trailing whitespace in the input file, this helps to avoid errors in processing the file.
+This ensures the script reads each line of the input file, splitting it into username and groups using ";" as the delimiter. "xargs" is used to remove leading and trailing whitespace in the input file, this helps to avoid errors in processing the file.
 
 ## Block 8
 ```
@@ -269,7 +273,7 @@ This checks if the user already exists and if so, logs a message and skips to th
         continue
     fi
 ```
-This creates the user with a home directory and sets the default shell to /bin/bash. If successful, logs a message; otherwise, logs an error and skips to the next iteration.
+This creates the user with a home directory and sets the default shell to /bin/bash. If successful, logs a message; otherwise, logs an error and skips to the next iteration. "$?" is equivalent to the exit status of the just ended action. An exit 0 means success. 
 
 ## Block 10
 ```
@@ -314,7 +318,7 @@ This generates a random password for the user using openssl, but the password wi
     # Hash the password
     hashed_password=$(openssl passwd -6 "$password")
 ```
-The hashes or encodes the plain text password
+This hashes or encodes the plain text password
 
 ### Block 15
 ```
