@@ -124,8 +124,8 @@ exit 0
 - Processing Input: Each line is processed to extract the username and groups. Whitespace is trimmed to avoid errors.
 - User Creation: The script will check if the user already exists. If not, it creates the user and their primary group (which is same name as username). The home directory of the user to which the user is the owner and the only one with "rwx" (read, write, execute) rights to it is also created.
 - Group Management: The script ensures additional groups exist (if not, it creates them) and assigns the user to these groups.
-- Password Management: The script generates a secure password, assigns it to the user, and logs it securely in /var/secure/user_passwords.csv. Only the root user would have access(read and write) to this file.
-- Logging: Each step executed by the script is logged for monitoring and auditing in /var/log/user_management.log along with the timestamp. Only the root user would have access(read and write) to this file.
+- Password Management: The script generates a secure password, assigns it to the user, and logs it securely in /var/secure/user_passwords.csv. Only the root user would have access (read and write) to this file.
+- Logging: Each step executed by the script is logged for monitoring and auditing in /var/log/user_management.log along with the timestamp. Only the root user would have access (read and write) to this file.
 
 ## Error Handling
 The script includes checks to handle existing users, missing groups, and file permissions, ensuring robust operation in various scenarios.
@@ -180,7 +180,7 @@ and the users assigned to it. If not, it will show no output.
 ```cat /var/secure/user_passwords.csv```
 
 ### Run to output the content and verify the access permissions on /var/secure/user_passwords.csv
-```ls /var/secure/user_passwords.csv```
+```ls -al /var/secure/user_passwords.csv```
 
 
 # Deeper Dive
