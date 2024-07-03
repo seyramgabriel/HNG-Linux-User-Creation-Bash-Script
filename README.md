@@ -368,7 +368,7 @@ The script simplifies user management in a Linux environment, ensuring consisten
 By automating these tasks, SysOps engineers or Linux Administrators can focus on more critical aspects of system management.
 
 ### Disclaimer:
-This article breaks down a bash script designed for automating user management in Linux. However, ensure it is tailored to your specific organizational needs.
+The article breaks down a bash script designed for automating user management in Linux. However, ensure it is tailored to your specific organizational needs.
 
 # Acknowledgment:
 This write up was inspired by a task assigned to DevOps interns in the HNG Internship Programme. Find out more on 
