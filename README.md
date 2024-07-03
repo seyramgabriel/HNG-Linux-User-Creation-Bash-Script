@@ -135,7 +135,8 @@ The script is executed as follows
 ```./create_users.sh <path-to-username-file>```   
 or 
 ```bash create_users.sh <path-to-username-file>```.
-You must be a root user or someone with root user privileges.
+You must be a root user or someone with root user privileges. Consequently, if you are not running as a root user, you must use "sudo", and that is if you are a "sudoer": ```sudo bash create_users.sh <path-to-username-file>```.
+
 
 Example of input file content:
 ```
@@ -184,7 +185,7 @@ and the users assigned to it. If not, it will show no output.
 
 
 # Deeper Dive
-Thus, this write-up has provided enough information for a high level documentation.The following section dives a little deeper into the work of each block of code in the script.  
+Thus far, this write-up has provided enough information for a high level documentation.The following section dives a little deeper into the work of each block of code in the script.  
 
 ## Block 1
 ```#!/bin/bash```
