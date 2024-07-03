@@ -132,7 +132,7 @@ The script includes checks to handle existing users, missing groups, and file pe
 
 ## Script Execution:
 The script is executed as follows
-./create_users.sh <path-to-username-file>    # Of course, you would not need sudo since you would be running the script as a root user.
+./create_users.sh <path-to-username-file>    # You must be a root user or someone with root user privileges
 or 
 bash create_users.sh <path-to-username-file>
 
@@ -197,7 +197,7 @@ if [[ $EUID -ne 0 ]]; then
    exit 1
 fi
 ```
-EUID-Effective User ID-is the ID of the current user. The ID of the root user is 0. Hence, this line ensures that the user running the script is a root user. 
+EUID-Effective User ID-is the ID of the current user. The ID of the root user is 0. Hence, this line ensures that the user running the script is a root user or has root user privileges. 
 exit 1-This line exits the script with an error code of 1 if the user is
 not a root user.
 
