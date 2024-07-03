@@ -132,9 +132,10 @@ The script includes checks to handle existing users, missing groups, and file pe
 
 ## Script Execution:
 The script is executed as follows
-./create_users.sh <path-to-username-file>    # You must be a root user or someone with root user privileges
+```./create_users.sh <path-to-username-file>```   
 or 
-bash create_users.sh <path-to-username-file>
+```bash create_users.sh <path-to-username-file>```
+You must be a root user or someone with root user privileges.
 
 Example of input file content:
 ```
