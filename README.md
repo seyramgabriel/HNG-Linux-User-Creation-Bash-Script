@@ -152,9 +152,9 @@ Note that sudo and www-data are system wide groups and already exist, by default
 ## Testing the Efficacy of the Script After Running it
 
 ### Run this command to output all current human users. 
-```<awk -F: '$3 >= 1000 {print $1}' /etc/passwd>```
+```awk -F: '$3 >= 1000 {print $1}' /etc/passwd```
 Do well to look out for the groups in your input text file
-Note: You could also output all existing users with ```<cat /etc/passwd>```, but it will output all users, not just human users.
+Note: You could also output all existing users with ```cat /etc/passwd```, but it will output all users, not just human users.
 
 ### Run the id command for a specific user
 ```id <username>```    eg. ```id idimma```
