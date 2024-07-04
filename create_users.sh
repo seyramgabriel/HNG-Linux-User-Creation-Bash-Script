@@ -33,17 +33,15 @@ while IFS=';' read -r username groups; do
 
     # Check if the user already exists
     if id "$username" &>/dev/null; then
-        log_message "User $username already exists. Skipping."
-        continue
+        log_message "User $username already exists."
     fi
 
     # Create user with a home directory
-    useradd -m -s /bin/bash "$username"
+    useradd -m -s /bin/bash "$username" &>/dev/null
     if [[ $? -eq 0 ]]; then
         log_message "User $username created."
     else
         log_message "Failed to create user $username."
-        continue
     fi
 
     # Create a group with the same name as the username
@@ -65,6 +63,12 @@ while IFS=';' read -r username groups; do
     chmod 700 "/home/$username"
     chown "$username:$username" "/home/$username"
 
+    #Check if password is already set
+    if passwd -S "$username" | grep -E 'P|NP' &>/dev/null; then
+        log_message "Password for $username already set."  
+        continue
+    fi
+
     # Generate a random password
     password=$(openssl rand -base64 12)
     # Hash the password
@@ -77,6 +81,7 @@ while IFS=';' read -r username groups; do
     echo "$username,$password" >> $PASSWORD_FILE
 
     log_message "Password for $username set."
+
 done < "$1"
 
 # Set permissions for the password file
@@ -87,6 +92,5 @@ chown root:root $PASSWORD_FILE
 chmod 600 $LOG_FILE
 chown root:root $LOG_FILE
 
-log_message "User creation process completed."
-
+log_message "USER CREATION PROCESS COMPLETED, USER CREATION PROCESS COMPLETED."
 exit 0

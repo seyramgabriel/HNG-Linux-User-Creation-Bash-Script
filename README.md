@@ -48,17 +48,15 @@ while IFS=';' read -r username groups; do
 
     # Check if the user already exists
     if id "$username" &>/dev/null; then
-        log_message "User $username already exists. Skipping."
-        continue
+        log_message "User $username already exists."
     fi
 
     # Create user with a home directory
-    useradd -m -s /bin/bash "$username"
+    useradd -m -s /bin/bash "$username" &>/dev/null
     if [[ $? -eq 0 ]]; then
         log_message "User $username created."
     else
         log_message "Failed to create user $username."
-        continue
     fi
 
     # Create a group with the same name as the username
@@ -80,6 +78,12 @@ while IFS=';' read -r username groups; do
     chmod 700 "/home/$username"
     chown "$username:$username" "/home/$username"
 
+    #Check if password is already set
+    if passwd -S "$username" | grep -E 'P|NP' &>/dev/null; then
+        log_message "Password for $username already set."  
+        continue
+    fi
+
     # Generate a random password
     password=$(openssl rand -base64 12)
     # Hash the password
@@ -88,10 +92,11 @@ while IFS=';' read -r username groups; do
     # Set the hashed password for the user
     echo "$username:$hashed_password" | chpasswd -e
 
-    # Log the plain text password for the CSV
+    # Log the hashed password for the CSV
     echo "$username,$password" >> $PASSWORD_FILE
 
     log_message "Password for $username set."
+
 done < "$1"
 
 # Set permissions for the password file
@@ -102,8 +107,7 @@ chown root:root $PASSWORD_FILE
 chmod 600 $LOG_FILE
 chown root:root $LOG_FILE
 
-log_message "User creation process completed."
-
+log_message "USER CREATION PROCESS COMPLETED, USER CREATION PROCESS COMPLETED."
 exit 0
 ```
 
@@ -200,7 +204,7 @@ if [[ $EUID -ne 0 ]]; then
 fi
 ```
 EUID-Effective User ID-is the ID of the current user. The ID of the root user is 0. Hence, this line ensures that the user running the script is a root user or has root user privileges. 
-exit 1-This line exits the script with an error code of 1 if the user is
+exit 1 - This line exits the script with an error code of 1 if the user is
 not a root user.
 
 ## Block 3
@@ -254,24 +258,22 @@ This ensures the script reads each line of the input file, splitting it into use
 ```
     # Check if the user already exists
     if id "$username" &>/dev/null; then
-        log_message "User $username already exists. Skipping."
-        continue
+        log_message "User $username already exists."
     fi
 ```
-This checks if the user already exists and if so, logs a message and skips to the next iteration. "log_message" is used to call the log_message function, then "User $username already exists. Skipping." becomes "$1" as indicated in the log_message function.
+This checks if the user already exists and if so, logs a message to that effect. "log_message" is used to call the log_message function, then "User $username already exists." becomes "$1" as indicated in the log_message function. The log message here would help explain user creation error logs in Block 9, if the error is due to a user already existing.
 
 ## Block 9
 ```
     # Create user with a home directory
-    useradd -m -s /bin/bash "$username"
+    useradd -m -s /bin/bash "$username" &>/dev/null
     if [[ $? -eq 0 ]]; then
         log_message "User $username created."
     else
         log_message "Failed to create user $username."
-        continue
     fi
 ```
-This creates the user with a home directory and sets the default shell to /bin/bash. If successful, logs a message; otherwise, logs an error and skips to the next iteration. "$?" is equivalent to the exit status of the just ended action. An exit 0 means success. 
+This creates the user with a home directory and sets the default shell to /bin/bash. If successful, logs a message; otherwise, logs an error. "$?" is equivalent to the exit status of the just ended action. An exit 0 means success. A typical use case for failure here would be where the user already exists. In that case, the exit status would be 1. The script checks for this and logs an error message then moves to the next block of code.
 
 ## Block 10
 ```
@@ -294,7 +296,7 @@ This creates a group with the same name as the username and adds the user to thi
         usermod -a -G "$group" "$username"
     done
 ```
-This splits the groups string by commas and processes each group. It trims whitespace, checks if the group exists, creates it if it does not exist, logs a message about the group created and adds the user to the group. Note that if the group already exists, there is no log to say it already exists, so as not to flood the log file.
+This splits the groups string by commas and processes each group. It trims whitespace, checks if the group exists, creates it if it does not exist, logs a message about the group created and adds the user to the group. Note that if the group already exists, there is no log to say it already exists, so as not to flood the log file. The user is just added. In case an already existing user has been assigned another group, this code block adds the user to that group.
 
 ### Block 12
 ```
@@ -304,42 +306,52 @@ This splits the groups string by commas and processes each group. It trims white
 ```
 This sets the permissions of the user's home directory to 700 and changes the ownership to the user and their group. This means that only the  users can read, write, and executive within their respective home directories.
 
-### Block 13
+### Block 13 
+```
+    # Check if password is already set
+    if passwd -S "$username" | grep -E 'P|NP' &>/dev/null; then
+        log_message "Password for $username already set, skipping."  
+        continue
+    fi
+```
+This is used to check if the password is already set. It takes care of a use case where an already existing user has the password set, in which case the subsequent code blocks for setting of password must be skipped. Also if an already existing user doesn't have their password set, then the script goes ahead to generate a secure password and set it for the user. 
+
+### Block 14
 ```
     # Generate a random password
     password=$(openssl rand -base64 12)
 ```
 This generates a random password for the user using openssl, but the password will be in plain text.
 
-### Block 14
+### Block 15
 ```
     # Hash the password
     hashed_password=$(openssl passwd -6 "$password")
 ```
 This hashes or encodes the plain text password.
 
-### Block 15
+### Block 16
 ```
     # Set the hashed password for the user
     echo "$username:$hashed_password" | chpasswd -e
 ```
 This sets the hashed password for the user using chpasswd. The -e flag is used to indicate.
 
-### Block 16
+### Block 17
 ```
     # Log the hashed password for the CSV
     echo "$username,$password" >> $PASSWORD_FILE
 ```
 This logs the hashed password of the user in the format "user,password" into the "/var/secure/user_passwords.csv" file.
 
-### Block 17
+### Block 18
 ```
     log_message "Password for $username set."
 done < "$1"
 ```
 This logs the action of password being set into "/var/log/user_manangement.log file".
 
-### Block 18
+### Block 19
 ```
 # Set permissions for the password file
 chmod 600 $PASSWORD_FILE
@@ -347,7 +359,7 @@ chown root:root $PASSWORD_FILE
 ```
 This sets the permissions of the password file to 600 (read and write for the owner only) and changes the ownership to root. This block of code ensures that only the root user has access to "/var/secure/user_passwords.csv" file.
 
-### Block 19
+### Block 20
 ```
 # Set permissions for the log file
 chmod 600 $LOG_FILE
@@ -355,13 +367,13 @@ chown root:root $LOG_FILE
 ```
 This sets the permissions of the log file to 600 (read and write for the owner only) and changes the ownership to root. This block of code ensures that only the root user has access to "/var/slog/user_management.log file".
 
-### Block 20
+### Block 21
 ```
-log_message "User creation process completed."
+log_message "USER CREATION PROCESS COMPLETED, USER CREATION PROCESS COMPLETED."
 
 exit 0
 ```
-This logs that the user creation process is complete and exits the script.
+This logs that the user creation process is complete and exits the script. The log message here is in upper case and repeated so as to ease the burden of studying log messages between successive script runs.
 
 ### Conclusion
 The script simplifies user management in a Linux environment, ensuring consistency, security, and efficiency. 
