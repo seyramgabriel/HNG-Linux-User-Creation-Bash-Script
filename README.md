@@ -62,7 +62,7 @@ while IFS=';' read -r username groups; do
     fi
 
     # Create a group with the same name as the username
-    groupadd "$username"
+    groupadd "$username" &>/dev/null
     usermod -a -G "$username" "$username"
 
     # Add user to additional groups
@@ -276,7 +276,7 @@ This creates the user with a home directory and sets the default shell to /bin/b
 ## Block 10
 ```
     # Create a group with the same name as the username
-    groupadd "$username"
+    groupadd "$username" &>/dev/null
     usermod -a -G "$username" "$username"
 ```
 This creates a group with the same name as the username and adds the user to this group. Remember, each username is used to create a primary group.

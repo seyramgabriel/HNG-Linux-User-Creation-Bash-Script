@@ -47,7 +47,7 @@ while IFS=';' read -r username groups; do
     fi
 
     # Create a group with the same name as the username
-    groupadd "$username"
+    groupadd "$username" &>/dev/null
     usermod -a -G "$username" "$username"
 
     # Add user to additional groups
