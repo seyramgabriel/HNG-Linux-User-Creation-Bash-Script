@@ -314,7 +314,7 @@ This sets the permissions of the user's home directory to 700 and changes the ow
         continue
     fi
 ```
-This is used to check if the password is already set. It takes care of a use case where an already existing user has the password set, in which case the subsequent code blocks for setting of password must be skipped. Also if an already existing user doesn't have their password set, then the script goes ahead to generate a secure password and set it for the user. 
+This is used to check if the user's password is already set. It takes care of a use case where an already existing user has the password set, in which case the subsequent code blocks for setting of password must be skipped. 
 
 ### Block 14
 ```
@@ -335,7 +335,7 @@ This hashes or encodes the plain text password.
     # Set the hashed password for the user
     echo "$username:$hashed_password" | chpasswd -e
 ```
-This sets the hashed password for the user using chpasswd. The -e flag is used to indicate.
+This sets the hashed password for the user using chpasswd. The -e flag is used to indicate the password is already encrypted.
 
 ### Block 17
 ```
