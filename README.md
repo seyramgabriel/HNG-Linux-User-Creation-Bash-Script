@@ -294,7 +294,7 @@ This creates a group with the same name as the username and adds the user to thi
         usermod -a -G "$group" "$username"
     done
 ```
-This splits the groups string by commas and processes each group. It trims whitespace, checks if the group exists, creates it if it does not exist, logs a message about the group created and adds the user to the group.
+This splits the groups string by commas and processes each group. It trims whitespace, checks if the group exists, creates it if it does not exist, logs a message about the group created and adds the user to the group. Note that if the group already exists, there is no log to say it already exists, so as not to flood the log file.
 
 ### Block 12
 ```
